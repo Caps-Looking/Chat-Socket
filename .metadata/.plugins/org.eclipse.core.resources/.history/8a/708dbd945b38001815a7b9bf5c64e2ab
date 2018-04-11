@@ -1,0 +1,40 @@
+import java.io.*;
+import java.net.*;
+
+class TCPServer {
+	public static void main(String argv[]) throws Exception {
+		String clientSentence;
+		String capitalizedSentence;
+
+		// criando socket servidor
+		ServerSocket welcomeSocket = new ServerSocket(6789);
+
+		System.out.println("Servidor iniciado.");
+
+		// loop infinito para atender varias conexoes
+		while (true) {
+			// espera por uma conexao (bloqueia a aplicacao).
+			// cria um novo socket local que ira tratar esta nova conexao
+			Socket connectionSocket = welcomeSocket.accept();
+
+			System.out.println("Conexao estabelecida...");
+
+			// obtendo fluxo de saida do socket local
+			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+
+			// obtendo fluxo de entrada do socket local
+			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+
+			// recebe dados enviados pelo socket cliente
+			clientSentence = inFromClient.readLine();
+
+			// transforma todos os caracteres em maiusculo
+			capitalizedSentence = clientSentence.toUpperCase() + '\n';
+
+			// envia dados para o socket cliente
+			outToClient.writeBytes(capitalizedSentence);
+
+			System.out.println("Resposta enviada.");
+		}
+	}
+}

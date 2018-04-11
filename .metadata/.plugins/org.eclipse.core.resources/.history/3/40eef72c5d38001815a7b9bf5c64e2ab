@@ -1,0 +1,50 @@
+import java.io.*;
+import java.net.*;
+
+public class TCPClient 
+{
+	public static void main(String argv[]) throws Exception
+	{
+		String sentence;
+		String modifiedSentence;
+
+		// obtendo fluxo de entrada do sistema local
+		BufferedReader inFromUser = new BufferedReader(
+		new InputStreamReader(System.in));
+
+		// criando um socket cliente. Conexao com socket servidor
+		Socket clientSocket = new Socket("10.1.39.88", 6785);
+
+		System.out.println("Conexao com servidor estabelecida...");
+		
+		// obtendo fluxo de saida do socket cliente
+		DataOutputStream outToServer = new DataOutputStream(
+		clientSocket.getOutputStream());
+
+		// obtendo fluxo de entrada do socket cliente
+		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(
+		clientSocket.getInputStream()));
+
+		System.out.print("Digite uma mensagem: ");
+		
+		// lendo caracteres digitados pelo cliente
+		sentence = inFromUser.readLine();
+
+		
+		
+		// enviando dados para o servidor
+		outToServer.writeBytes(sentence + '\n');
+
+		// lendo dados recebidos do servidor
+		modifiedSentence = inFromServer.readLine();
+
+		
+		
+		// exibir dados do servidor para o usuario local
+		System.out.println("FROM SERVER: " + 
+		        modifiedSentence);
+
+		// fechar conexao
+		clientSocket.close();
+	}
+}

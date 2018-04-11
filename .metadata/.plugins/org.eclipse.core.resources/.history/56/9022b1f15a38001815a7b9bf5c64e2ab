@@ -1,0 +1,9 @@
+public class ImprimeMensagem implements Runnable {
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

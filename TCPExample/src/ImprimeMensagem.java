@@ -1,0 +1,19 @@
+import java.io.InputStream;
+import java.util.Scanner;
+
+public class ImprimeMensagem implements Runnable {
+
+	private Scanner scanner;
+
+	public ImprimeMensagem(InputStream is) {
+		scanner = new Scanner(is);
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			System.out.println(scanner.nextLine());
+		}
+	}
+
+}
