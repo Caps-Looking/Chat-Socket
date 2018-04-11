@@ -1,25 +1,56 @@
+import java.io.IOException;
+import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 class TCPServer {
-	private static ServerSocket welcomeSocket;
-
+	
+	private ServerSocket serverSocket;
+	private List<PrintStream> clientes = new ArrayList<PrintStream>();
+	
 	public static void main(String argv[]) throws Exception {
-		welcomeSocket = new ServerSocket(6789);
-
-		System.out.println("Servidor iniciado.");
-		
-		// espera por uma conexao (bloqueia a aplicacao).
-		// cria um novo socket local que ira tratar esta nova conexao
-		Socket connectionSocket = welcomeSocket.accept();
-
-		System.out.println("Conexao estabelecida...");
-
-		Thread threadInput = new Thread(new PipeStreamLine(connectionSocket.getInputStream(), System.out));
-		Thread threadOutput = new Thread(new PipeStreamLine(System.in, connectionSocket.getOutputStream()));
-
-		threadInput.start();
-		threadOutput.start();		
+		new TCPServer().iniciarServidor();
+	}
+	
+	/**
+	 * Inicia o servidor na porta 6789
+	 * @throws IOException
+	 */
+	private void iniciarServidor() throws IOException {
+		serverSocket = new ServerSocket(6789);
+		System.out.println("Servidor iniciado!");		
+		escutarConexoes();
+	}
+	
+	/**
+	 * Loop infinito para escutar cada conexão
+	 * @throws IOException
+	 */
+	private void escutarConexoes() throws IOException {		
+		while(true) {
+			Socket cliente = serverSocket.accept();
+			
+			System.out.println("Nova conexão estabelecida!");
+			System.out.println("Endereço do meliante: " + cliente.getInetAddress().getHostAddress());
+			
+			PrintStream ps = new PrintStream(cliente.getOutputStream());
+			this.clientes.add(ps);
+			
+			EscutadorDeMensagens escMsg = new EscutadorDeMensagens(cliente.getInputStream(), this); 
+			new Thread(escMsg).start();
+		}
+	}
+	
+	/**
+	 * Distribui as mensagens para os clientes
+	 * @param msg
+	 */
+	public void distribuirMensagens(String msg) {
+		clientes.forEach(cliente -> {
+			cliente.println(msg);
+		});
 	}
 	
 }

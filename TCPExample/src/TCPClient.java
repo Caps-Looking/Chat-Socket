@@ -2,10 +2,10 @@ import java.net.Socket;
 
 public class TCPClient {
 
+	private static Socket clientSocket;
+
 	public static void main(String argv[]) throws Exception {
-		// criando um socket cliente. Conexao com socket servidor
-		@SuppressWarnings("resource")
-		Socket clientSocket = new Socket("localhost", 6789);
+		clientSocket = new Socket("localhost", 6789);
 
 		System.out.println("Conexao com servidor estabelecida...");
 
@@ -15,5 +15,4 @@ public class TCPClient {
 		threadInput.start();
 		threadOutput.start();
 	}
-
 }
