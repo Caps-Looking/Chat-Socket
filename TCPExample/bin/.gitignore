@@ -1,3 +1,4 @@
-/Recebedor.class
-/Cliente.class
+/EscutadorDeMensagens.class
+/PipeStreamLine.class
 /TCPClient.class
+/TCPServer.class

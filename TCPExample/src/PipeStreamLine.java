@@ -17,7 +17,7 @@ public class PipeStreamLine implements Runnable {
 	public void run() {
 		while (true) {
 			String line = scanner.nextLine();
-			output.println(line + "\n");
+			output.println(line);
 		}
 	}
 
